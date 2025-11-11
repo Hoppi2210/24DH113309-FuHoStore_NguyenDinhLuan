@@ -1,0 +1,59 @@
+﻿@model IEnumerable<_24DH113309_MyStore.Models.Customer>
+
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-center text-success">QUẢN LÝ KHÁCH HÀNG</h2>
+
+<table class="table table-bordered table-hover text-center">
+    <thead class="bg-success text-white">
+        <tr>
+            <th><input type="checkbox" id="checkAll" /></th>
+            <th>Mã KH</th>
+            <th>Họ và Tên</th>
+            <th>Email</th>
+            <th>Hình ảnh</th>
+            <th>Trạng thái</th>
+            <th>Vai trò</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td>@item.CustomerID</td>
+                <td>@item.CustomerName</td>
+                <td>@item.CustomerEmail</td>
+                <td>
+                    <img src="~/Content/Images/Customers/@item.CustomerImage" style="width:70px;height:70px;border-radius:8px;" />
+                </td>
+                <td>@(item.IsActive == true ? "Kích hoạt" : "Chưa kích hoạt")</td>
+
+                <td>@item.Role</td>
+                <td>
+                    @Html.ActionLink("Sửa", "Edit", new { id = item.CustomerID }, new { @class = "btn btn-warning btn-sm" }) |
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.CustomerID }, new { @class = "btn btn-danger btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-end mt-3">
+    <button class="btn btn-success">Chọn tất cả</button>
+    <button class="btn btn-secondary">Bỏ chọn</button>
+    <button class="btn btn-danger">Xóa các mục chọn</button>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Nhập thêm</a>
+</div>
+
+<script>// Chọn tất cả checkbox
+    document.getElementById("checkAll").addEventListener("change", function () {
+        var checkboxes = document.querySelectorAll("tbody input[type='checkbox']");
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    });</script>

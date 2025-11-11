@@ -1,0 +1,41 @@
+﻿@model _24DH113309_MyStore.Models.Order
+@{
+    ViewBag.Title = "Thêm đơn hàng mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-success" style="background-color:#e6f5e6; padding:10px;">THÊM ĐƠN HÀNG MỚI</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="padding:20px; background-color:#f9fdf9; border-radius:10px;">
+
+        <div class="form-group mb-3">
+            @Html.Label("Khách hàng")
+            @Html.DropDownList("CustomerID", null, "-- Chọn khách hàng --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.Label("Tổng tiền (VNĐ)")
+            @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", type = "number", min = "0", placeholder = "Nhập tổng tiền" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.Label("Trạng thái thanh toán")
+            @Html.DropDownListFor(model => model.PaymentStatus,
+                     new SelectList(new[] { "Paid", "Unpaid" }),
+                     "-- Chọn trạng thái --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.Label("Địa chỉ giao hàng")
+            @Html.TextBoxFor(model => model.AddressDelivery, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group text-center mt-4">
+            <input type="submit" value="Lưu" class="btn btn-success" />
+            @Html.ActionLink("Trở về", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    </div>
+}

@@ -1,0 +1,93 @@
+﻿@model _24DH113309_MyStore.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .product-detail-card {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 25px 30px;
+        max-width: 900px;
+        margin: 30px auto;
+    }
+
+    .product-img {
+        max-width: 250px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .product-img:hover {
+            transform: scale(1.05);
+        }
+
+    .product-info dt {
+        font-weight: 600;
+        color: #0066cc;
+    }
+
+    .product-info dd {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        color: #00a0ff;
+        margin-bottom: 20px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .product-actions .btn {
+        min-width: 110px;
+        font-weight: 500;
+        border-radius: 6px;
+        margin-right: 8px;
+        margin-top: 5px;
+    }
+</style>
+
+<h2>CHI TIẾT SẢN PHẨM</h2>
+
+<div class="product-detail-card">
+    <div class="row">
+        <!-- ẢNH BÊN TRÁI -->
+        <div class="col-md-4 text-center">
+            <img src="@Model.ProductImage"
+                 alt="Ảnh sản phẩm"
+                 class="img-fluid product-img" />
+        </div>
+
+        <!-- THÔNG TIN BÊN PHẢI -->
+        <div class="col-md-8">
+            <dl class="row product-info">
+                <dt class="col-sm-4">Mã sản phẩm:</dt>
+                <dd class="col-sm-8">@Model.ProductID</dd>
+
+                <dt class="col-sm-4">Tên sản phẩm:</dt>
+                <dd class="col-sm-8">@Model.ProductName</dd>
+
+                <dt class="col-sm-4">Giá:</dt>
+                <dd class="col-sm-8">@String.Format("{0:N0} VNĐ", Model.ProductPrice)</dd>
+
+                <dt class="col-sm-4">Danh mục:</dt>
+                <dd class="col-sm-8">@Model.Category.CategoryName</dd>
+
+                <dt class="col-sm-4">Mô tả:</dt>
+                <dd class="col-sm-8">@Html.Raw(Model.ProductDecription)</dd>
+            </dl>
+
+            <div class="product-actions mt-3">
+                @Html.ActionLink("✏️ Sửa", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("🗑 Xóa", "Delete", new { id = Model.ProductID }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("⬅ Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿@model _24DH113309_MyStore.Models.Product
+
+<head>
+    <style>
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px 30px;
+            margin-top: 20px;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-image {
+            height: 260px;
+            max-width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info dt {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .product-info dd {
+            margin-bottom: 12px;
+            color: #222;
+            font-size: 15px;
+        }
+
+        .price {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .category {
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .btn-section {
+            margin-top: 25px;
+        }
+
+            .btn-section a {
+                min-width: 120px;
+                margin-right: 8px;
+            }
+    </style>
+</head>
+
+<div class="container">
+    <div class="product-card">
+        <h2 class="product-title text-center">CHI TIẾT SẢN PHẨM</h2>
+        <hr />
+
+        <div class="row align-items-start">
+            <!-- Hình ảnh -->
+            <div class="col-md-5 text-center mb-3">
+                <img src="@Html.DisplayFor(model => model.ProductImage)" alt="Product Image" class="product-image" />
+            </div>
+
+            <!-- Thông tin -->
+            <div class="col-md-7 product-info">
+                <dl class="row">
+                    <dt class="col-sm-4">Tên sản phẩm</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ProductName)</dd>
+
+                    <dt class="col-sm-4">Mô tả</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ProductDecription)</dd>
+
+                    <dt class="col-sm-4">Đơn giá</dt>
+                    <dd class="col-sm-8 price">@String.Format("{0:N0} VNĐ", Model.ProductPrice)</dd>
+
+                    <dt class="col-sm-4">Danh mục</dt>
+                    <dd class="col-sm-8 category">@Html.DisplayFor(model => model.Category.CategoryName)</dd>
+                </dl>
+                
+
+            </div>
+        </div>
+    </div>
+</div>

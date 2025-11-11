@@ -1,0 +1,95 @@
+﻿@model _24DH113309_MyStore.Models.Customer
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-success" style="background-color:#e6f5e6; padding:10px;">QUẢN LÝ KHÁCH HÀNG</h2>
+
+@using (Html.BeginForm("Create", "Customers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container" style="margin-top:20px;">
+        <div class="row">
+            <!-- Cột trái -->
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.Label("MÃ KHÁCH HÀNG")
+                    @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", placeholder = "Nhập mã khách hàng" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("MẬT KHẨU")
+                    <input type="password" name="Password" class="form-control" placeholder="Nhập mật khẩu" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("ĐỊA CHỈ EMAIL")
+                    @Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control", placeholder = "Nhập email" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("KÍCH HOẠT?")
+                    <div>
+                        <label class="me-3">
+                            <input type="radio" name="IsActive" value="false" checked /> Chưa kích hoạt
+                        </label>
+                        <label>
+                            <input type="radio" name="IsActive" value="true" /> Kích hoạt
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải -->
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.Label("HỌ VÀ TÊN")
+                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", placeholder = "Nhập họ tên khách hàng" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("XÁC NHẬN MẬT KHẨU")
+                    <input type="password" name="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("HÌNH ẢNH")
+                    <input type="file" name="uploadImage" class="form-control" />
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.Label("VAI TRÒ")
+                    <div>
+                        <label class="me-3">
+                            <input type="radio" name="Role" value="Customer" checked /> Khách hàng
+                        </label>
+                        <label>
+                            <input type="radio" name="Role" value="Staff" /> Nhân viên
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nút hành động -->
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-success me-2">Thêm mới</button>
+            <button type="reset" class="btn btn-warning me-2">Nhập lại</button>
+            @Html.ActionLink("Danh sách", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
+}
+
+<script>
+    // Kiểm tra mật khẩu xác nhận trước khi submit
+    document.querySelector("form").addEventListener("submit", function (e) {
+        var pass = document.querySelector("[name='Password']").value;
+        var confirm = document.querySelector("[name='ConfirmPassword']").value;
+        if (pass !== confirm) {
+            alert("❌ Mật khẩu xác nhận không khớp, vui lòng nhập lại!");
+            e.preventDefault();
+        }
+    });
+</script>

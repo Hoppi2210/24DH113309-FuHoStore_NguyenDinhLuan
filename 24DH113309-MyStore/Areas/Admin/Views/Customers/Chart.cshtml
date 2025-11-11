@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Thống kê khách hàng theo tháng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-center text-primary mb-4">Biểu đồ thống kê khách hàng theo tháng</h2>
+
+<div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var rawData = @Html.Raw(ViewBag.Data);
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Tháng');
+            data.addColumn('number', 'Số lượng khách hàng');
+
+            rawData.forEach(function (item) {
+                data.addRow([item.Thang, item.SoLuong]);
+            });
+
+            var options = {
+                title: 'Thống kê số lượng khách hàng theo tháng',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                colors: ['#00bfa5'],
+                pointSize: 6
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+}
+<p>
+    @Html.ActionLink("➕ Thêm khách hàng", "Create", null, new { @class = "btn btn-success" })
+    @Html.ActionLink("📊 Xem biểu đồ thống kê", "Chart", null, new { @class = "btn btn-info ms-3" })
+</p>
+

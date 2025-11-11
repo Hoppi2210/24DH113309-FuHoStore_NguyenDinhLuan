@@ -1,0 +1,23 @@
+﻿@model _24DH113309_MyStore.Models.Product
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>XÓA SẢN PHẨM</h2>
+
+<h4 class="bg-warning"> Bạn thực sự muốn xóa sản phẩm này không?</h4>
+
+@Html.Partial("PVProdInfo", Model)
+
+
+
+@using (Html.BeginForm("Delete", "Products", new { area = "Admin", id = Model.ProductID }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+<div class="text-end mt-3">
+    <input type="submit" value="Xóa" class="btn btn-danger  me-2" />
+    @Html.ActionLink("← Quay lại danh sách", "Index", null, new { @class = "btn btn-outline-secondary" })
+</div>
+}

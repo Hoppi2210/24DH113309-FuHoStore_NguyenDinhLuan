@@ -1,0 +1,60 @@
+﻿@model List<_24DH113309_MyStore.Models.ViewModels.CartItemVM>
+
+@{
+    ViewBag.Title = "Giỏ hàng của bạn";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2 class="text-center my-4">🛍 Giỏ hàng của bạn</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info text-center">
+        Giỏ hàng của bạn đang trống.
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-sm ms-2">Tiếp tục mua sắm</a>
+    </div>
+}
+else
+{
+    <table class="table table-bordered align-middle text-center">
+        <thead class="table-primary">
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img src="@item.Image" style="width:100px; height:auto; border-radius:8px;" /></td>
+                    <td>@item.Name</td>
+                    <td>@String.Format("{0:N0} VNĐ", item.Price)</td>
+                    <td>@item.Qty</td>
+                    <td>@String.Format("{0:N0} VNĐ", item.Total)</td>
+                    <td>
+                        <a href="@Url.Action("RemoveItem", "Cart", new { id = item.ProductID })" class="btn btn-danger btn-sm">🗑 Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot class="table-light">
+            <tr>
+                <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
+                <td colspan="2" class="fw-bold text-danger">
+                    @String.Format("{0:N0} VNĐ", Model.Sum(x => x.Total))
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text-center mt-3">
+        <a href="@Url.Action("Clear", "Cart")" class="btn btn-outline-danger">🧹 Xóa tất cả</a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">← Tiếp tục mua hàng</a>
+        <a href="#" class="btn btn-success">💳 Thanh toán</a>
+    </div>
+}

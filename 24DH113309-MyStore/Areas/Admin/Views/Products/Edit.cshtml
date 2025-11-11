@@ -1,0 +1,15 @@
+﻿@model _24DH113309_MyStore.Models.Product
+@{
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="text-center text-primary mb-4">🧩 Cập nhật sản phẩm</h2>
+
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ProductID)
+    @Html.Partial("PVCreateEditProduct", Model)
+
+}
