@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using _24DH113309_MyStore.Models;
+using System.Data.Entity.Validation; 
 
 namespace _24DH113309_MyStore.Areas.Admin.Controllers
 {
-    // Yêu cầu đăng nhập, và chỉ Admin mới được truy cập
-    [Authorize(Roles = "Admin")]
+    
     public class AdminUsersController : Controller
     {
         private MyStoreEntities db = new MyStoreEntities();
@@ -40,13 +40,30 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
                 }
                 else
                 {
-                    // Cần mã hóa mật khẩu ở đây
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    TempData["SuccessMessage"] = "Thêm tài khoản quản trị thành công!";
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        // Cần mã hóa mật khẩu ở đây
+                        db.Users.Add(user);
+                        db.SaveChanges(); // Lỗi xảy ra ở đây
+                        TempData["SuccessMessage"] = "Thêm tài khoản quản trị thành công!";
+                        return RedirectToAction("Index");
+                    }
+                    
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (var validationErrors in ex.EntityValidationErrors)
+                        {
+                            foreach (var validationError in validationErrors.ValidationErrors)
+                            {
+                                
+                                ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                            }
+                        }
+                    }
                 }
             }
+
+            // Nếu có lỗi (hoặc ModelState không hợp lệ), quay lại form
             ViewBag.UserRole = new SelectList(GetRoles(), user.UserRole);
             return View(user);
         }
@@ -57,7 +74,6 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(username)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             User user = db.Users.Find(username);
             if (user == null) return HttpNotFound();
-
             ViewBag.UserRole = new SelectList(GetRoles(), user.UserRole);
             return View(user);
         }
@@ -68,6 +84,12 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
         {
             var existingUser = db.Users.AsNoTracking().FirstOrDefault(u => u.Username == user.Username);
 
+            // Xóa lỗi validation của Password nếu không nhập
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                ModelState.Remove("Password");
+            }
+
             if (ModelState.IsValid)
             {
                 // Giữ mật khẩu cũ nếu không nhập mật khẩu mới
@@ -76,10 +98,23 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
                     user.Password = existingUser?.Password;
                 }
 
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                TempData["SuccessMessage"] = "Cập nhật tài khoản thành công!";
-                return RedirectToAction("Index");
+                try
+                {
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();
+                    TempData["SuccessMessage"] = "Cập nhật tài khoản thành công!";
+                    return RedirectToAction("Index");
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var validationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        }
+                    }
+                }
             }
             ViewBag.UserRole = new SelectList(GetRoles(), user.UserRole);
             return View(user);
@@ -100,14 +135,12 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
         public ActionResult DeleteConfirmed(string username)
         {
             User user = db.Users.Find(username);
-
             // Bảo vệ: Không cho phép tự xóa tài khoản đang đăng nhập
             if (user.Username == User.Identity.Name)
             {
                 TempData["ErrorMessage"] = "Không thể tự xóa tài khoản đang đăng nhập.";
                 return RedirectToAction("Index");
             }
-
             db.Users.Remove(user);
             db.SaveChanges();
             TempData["SuccessMessage"] = "Đã xóa tài khoản.";

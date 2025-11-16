@@ -1,0 +1,42 @@
+﻿@model _24DH113309_MyStore.Models.Customer
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Chỉnh sửa tài khoản";
+}
+
+<div class="container mt-4" style="max-width: 750px;">
+
+    <h2 class="fw-bold mb-4">✏ Chỉnh sửa thông tin</h2>
+
+    <div class="card shadow-sm p-4">
+
+        @if (ViewBag.Success != null)
+        {
+            <div class="alert alert-success">@ViewBag.Success</div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m => m.CustomerID)
+
+            <div class="mb-3">
+                <label>Họ và tên</label>
+                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                <label>Số điện thoại</label>
+                @Html.TextBoxFor(m => m.CustomerPhone, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                <label>Địa chỉ</label>
+                @Html.TextAreaFor(m => m.CustomerAddress,
+                         new { @class = "form-control", rows = "3", required = "required" })
+            </div>
+
+            <button class="btn btn-success px-4">Lưu thay đổi</button>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,53 @@
+﻿@model _24DH113309_MyStore.Models.ViewModels.ProductDetailVM
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = Model.product.ProductName;
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-5">
+            <img src="@Model.product.ProductImage"
+                 class="img-fluid rounded shadow"
+                 style="max-height:420px; object-fit:cover;" />
+        </div>
+
+        <div class="col-md-4">
+            <h2 class="fw-bold">@Model.product.ProductName</h2>
+            <p class="text-muted">Đã bán: @Model.product.OrderDetails.Count()</p>
+
+            <h3 class="text-danger fw-bold mt-3">
+                @String.Format("{0:N0}", Model.product.ProductPrice) VNĐ
+            </h3>
+
+            <p class="mt-4">@Model.product.ProductDecription</p>
+
+            <hr />
+
+            @using (Html.BeginForm("ProductDetail", "Home", FormMethod.Get))
+            {
+                @Html.Hidden("id", Model.product.ProductID)
+                <div class="row">
+                    <div class="col-md-6">
+                        <label><strong>Số lượng</strong></label>
+                        @Html.TextBoxFor(m => m.quantity, new { @class = "form-control", type = "number", min = 1 })
+                    </div>
+                </div>
+
+                @Html.ActionLink("🛒 Thêm vào giỏ", "Add", "Cart",
+                         new { productId = Model.product.ProductID },
+                         new { @class = "btn btn-success btn-lg mt-4 px-4 py-2" })
+            }
+        </div>
+
+        <div class="col-md-3">
+            @Html.Partial("_PVTopProduct", Model)
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            @Html.Partial("_PVRelatedProduct", Model)
+        </div>
+    </div>
+</div>

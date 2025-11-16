@@ -1,13 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using _24DH113309_MyStore.Models.Metadata;   // ✅ import metadata namespace
+using _24DH113309_MyStore.Models.Metadata; // Đảm bảo bạn có dòng using này
 
 namespace _24DH113309_MyStore.Models
 {
-    // ===============================
-    // 🔹 PRODUCT PARTIAL CLASS
-    // ===============================
+    // Gán UserMetadata cho User
+    [MetadataType(typeof(UserMetadata))]
+    public partial class User
+    {
+        // Để trống
+    }
+
+    // Gán ProductMetadata cho Product
     [MetadataType(typeof(ProductMetadata))]
     public partial class Product
     {
@@ -24,9 +29,7 @@ namespace _24DH113309_MyStore.Models
         }
     }
 
-    // ===============================
     //  CUSTOMER PARTIAL CLASS
-    // ===============================
     [MetadataType(typeof(CustomerMetadata))]
     public partial class Customer
     {
@@ -34,30 +37,7 @@ namespace _24DH113309_MyStore.Models
         public string DisplayName => $"{CustomerName} ({CustomerEmail})";
     }
 
-    // ===============================
-    // 🔹 USER PARTIAL CLASS
-    // ===============================
-    [MetadataType(typeof(UserMetadata))]
-    public partial class User
-    {
-        [NotMapped]
-        public string RoleDescription
-        {
-            get
-            {
-                switch (UserRole)
-                {
-                    case "Admin": return "Quản trị viên";
-                    case "Staff": return "Nhân viên";
-                    default: return "Khách hàng";
-                }
-            }
-        }
-    }
-
-    // ===============================
     // 🔹 ORDER PARTIAL CLASS
-    // ===============================
     public partial class Order
     {
         [NotMapped]

@@ -1,0 +1,37 @@
+﻿@model _24DH113309_MyStore.Models.Customer
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Thông tin tài khoản";
+}
+
+<div class="container mt-4" style="max-width: 750px;">
+    <h2 class="fw-bold mb-4">👤 Thông tin tài khoản</h2>
+
+    <div class="card shadow-sm p-4">
+
+        <table class="table table-borderless">
+            <tr>
+                <th class="text-muted">Họ tên:</th>
+                <td>@Model.CustomerName</td>
+            </tr>
+            <tr>
+                <th class="text-muted">Số điện thoại:</th>
+                <td>@Model.CustomerPhone</td>
+            </tr>
+            <tr>
+                <th class="text-muted">Email:</th>
+                <td>@Model.CustomerEmail</td>
+            </tr>
+            <tr>
+                <th class="text-muted">Địa chỉ:</th>
+                <td>@Model.CustomerAddress</td>
+            </tr>
+        </table>
+
+        <div class="text-end mt-3">
+            <a href="@Url.Action("EditInfo","Account")" class="btn btn-primary px-4">
+                ✏ Chỉnh sửa
+            </a>
+        </div>
+    </div>
+</div>

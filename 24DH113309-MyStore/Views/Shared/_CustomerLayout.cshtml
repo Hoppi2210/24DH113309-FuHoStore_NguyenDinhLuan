@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using _24DH113309_MyStore.Models
+@{
+    var cus = Session["CUS"] as Customer;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,62 +10,74 @@
     <title>@ViewBag.Title - MyStore</title>
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <style>
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffc107;
+            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .dropdown-menu a {
+            padding: 10px 15px !important;
+        }
+    </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2">
         <div class="container">
-            <a class="navbar-brand fw-bold text-warning" href="@Url.Action("Index","Home")">🛍 MyStore</a>
+            <a class="navbar-brand fw-bold text-warning" href="@Url.Action("Index","Home")">
+                🛍 FUHO Store
+            </a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">@Html.ActionLink("Trang chủ", "Index", "Home", null, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.ActionLink("Giỏ hàng", "Index", "Cart", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Đơn hàng", "MyOrder", "Order", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "nav-link" })</li>
+
+                    @if (cus == null)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "nav-link text-warning fw-bold" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="user-icon me-2">
+                                    @cus.CustomerName.Substring(0, 1).ToUpper()
+                                </div>
+                                @cus.CustomerName
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="@Url.Action("ProfileInfo", "Account")">👤 Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("MyOrder", "Order")">📦 Lịch sử mua hàng</a></li>
+
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item text-danger" href="@Url.Action("Logout", "Account")">🚪 Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- ✅ PHẦN HIỂN THỊ NỘI DUNG VIEW -->
     <main class="container mt-4">
         @RenderBody()
     </main>
-
-    <!-- FOOTER -->
     <footer class="bg-light text-center py-3 mt-5 border-top">
-        <small>© @DateTime.Now.Year - MyStore. All rights reserved.</small>
+
+        <p>&copy; @DateTime.Now.Year - CHUC ANH EM 83 86 !!!!</p>
+        <h4>Sologan FUHO</h4>
+        <p>Sáng đi FuHo,Chiều đi lấy NGÓT nha AE!!!</p>
+        <p>Mọi thắc mắc xin vui lòng liên hệ tới: </p>
+        <p>SĐT:096677895  Email:FuHoStore@gmail.com </p>
     </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- ✅ Toast thông báo thêm vào giỏ -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
-        <div id="toastCart" class="toast align-items-center text-white bg-success border-0" role="alert">
-            <div class="d-flex">
-                <div class="toast-body fw-bold">
-                    🛒 Sản phẩm đã được thêm vào giỏ hàng!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showCartToast() {
-            const toastEl = document.getElementById('toastCart');
-            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
-            toast.show();
-        }
-
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('added') === 'true') {
-            showCartToast();
-            const newUrl = window.location.origin + window.location.pathname;
-            window.history.replaceState({}, document.title, newUrl);
-        }
-    </script>
 </body>
 </html>

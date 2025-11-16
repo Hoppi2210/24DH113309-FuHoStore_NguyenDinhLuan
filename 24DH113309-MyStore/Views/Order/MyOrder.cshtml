@@ -1,0 +1,95 @@
+﻿@model IEnumerable<_24DH113309_MyStore.Models.Order>
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    .order-card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .order-header {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-body {
+        padding: 15px;
+    }
+
+    .product-item {
+        display: flex;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+        .product-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .product-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+    .order-footer {
+        padding: 10px 15px;
+        background-color: #f8f9fa;
+        text-align: right;
+        border-top: 1px solid #ddd;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Bạn chưa có đơn hàng nào.</div>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <strong>Mã đơn hàng: #@order.OrderID</strong>
+                    <br />
+                    <small class="text-muted">Ngày đặt: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")</small>
+                </div>
+                <span class="badge bg-info text-dark">@order.PaymentStatus</span>
+            </div>
+            <div class="order-body">
+                @foreach (var detail in order.OrderDetails)
+                {
+                    <div class="product-item">
+                        <img src="@detail.Product.ProductImage" alt="@detail.Product.ProductName" />
+                        <div>
+                            <strong>@detail.Product.ProductName</strong>
+                            <br />
+                            <span>Số lượng: @detail.Quantity</span>
+                            <br />
+                            <span class="text-muted">Giá: @detail.UnitPrice.ToString("N0") VNĐ</span>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="order-footer">
+                <strong class="fs-5">Tổng tiền: <span class="text-danger">@order.TotalAmount.ToString("N0") VNĐ</span></strong>
+            </div>
+        </div>
+    }
+}

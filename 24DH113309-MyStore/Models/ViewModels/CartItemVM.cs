@@ -6,11 +6,11 @@ namespace _24DH113309_MyStore.Models.ViewModels
     public class CartItemVM
     {
         public int ProductID { get; set; }
-        public string ProductName { get; set; }
-        public string Image { get; set; }
-        public decimal UnitPrice { get; set; }
-        public int Quantity { get; set; }
+        public string Name { get; set; }      // tên sản phẩm
+        public decimal Price { get; set; }    // giá bán
+        public int Qty { get; set; }          // số lượng
+        public string Image { get; set; }     // ảnh
 
-        public decimal Total => UnitPrice * Quantity;
+        public decimal Total => Price * Qty;  // tổng cộng
     }
 }

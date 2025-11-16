@@ -1,0 +1,52 @@
+﻿@model _24DH113309_MyStore.Models.ShippingAddress
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Thêm địa chỉ";
+}
+
+<h3>➕ Thêm địa chỉ giao hàng</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Họ tên</label>
+        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", required = "" })
+    </div>
+
+    <div class="mb-3">
+        <label>Số điện thoại</label>
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", required = "" })
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>Tỉnh/Thành</label>
+            @Html.TextBoxFor(m => m.Province, new { @class = "form-control", required = "" })
+        </div>
+
+        <div class="col-md-4">
+            <label>Quận/Huyện</label>
+            @Html.TextBoxFor(m => m.District, new { @class = "form-control", required = "" })
+        </div>
+
+        <div class="col-md-4">
+            <label>Phường/Xã</label>
+            @Html.TextBoxFor(m => m.Ward, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+        <label>Địa chỉ chi tiết</label>
+        @Html.TextBoxFor(m => m.AddressDetail, new { @class = "form-control", required = "" })
+    </div>
+
+    <div class="form-check mb-3">
+        @Html.CheckBox("IsDefaultBool", Model.IsDefaultBool, new { @class = "form-check-input", id = "default" })
+        <label class="form-check-label" for="default">Đặt làm mặc định</label>
+    </div>
+
+    <button class="btn btn-primary">Lưu</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+}

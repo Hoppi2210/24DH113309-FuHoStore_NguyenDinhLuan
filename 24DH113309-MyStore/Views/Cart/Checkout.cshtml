@@ -1,0 +1,138 @@
+﻿@model _24DH113309_MyStore.Models.ViewModels.CheckoutVM
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Thanh toán";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">💳 Thanh toán</h2>
+
+    @using (Html.BeginForm("Checkout", "Cart", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.CustomerID)
+        @Html.HiddenFor(m => m.TotalAmount)
+        @Html.HiddenFor(m => m.Username)
+
+        <div class="row">
+            <div class="col-md-8">
+
+                <h5 class="fw-bold mb-3">Sản phẩm trong giỏ</h5>
+                <table class="table table-bordered shadow-sm bg-white">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th width="80">SL</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CartItems.Count; i++)
+                        {
+                            // Truyền dữ liệu giỏ hàng để POST qua Paypal
+                            @Html.HiddenFor(m => m.CartItems[i].ProductID)
+                            @Html.HiddenFor(m => m.CartItems[i].Quantity)
+                            @Html.HiddenFor(m => m.CartItems[i].UnitPrice)
+                            @Html.HiddenFor(m => m.CartItems[i].Product.ProductName)
+
+                            <tr>
+                                <td>
+                                    <img src="@Model.CartItems[i].Product.ProductImage" width="50" class="me-2" />
+                                    @Model.CartItems[i].Product.ProductName
+                                </td>
+                                <td>@String.Format("{0:N0}", Model.CartItems[i].UnitPrice) VNĐ</td>
+                                <td>@Model.CartItems[i].Quantity</td>
+                                <td class="text-danger fw-bold">
+                                    @String.Format("{0:N0}", Model.CartItems[i].UnitPrice * Model.CartItems[i].Quantity) VNĐ
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <h5 class="fw-bold mb-3 mt-4">Địa chỉ giao hàng</h5>
+                <div class="card shadow-sm p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.FullName, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Nhập họ và tên" })
+                            @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Phone, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Nhập số điện thoại" })
+                            @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            @Html.LabelFor(m => m.Province, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Province, new { @class = "form-control", placeholder = "VD: Hà Nội" })
+                            @Html.ValidationMessageFor(m => m.Province, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            @Html.LabelFor(m => m.District, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.District, new { @class = "form-control", placeholder = "VD: Nam Từ Liêm" })
+                            @Html.ValidationMessageFor(m => m.District, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            @Html.LabelFor(m => m.Ward, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Ward, new { @class = "form-control", placeholder = "VD: Mỹ Đình 1" })
+                            @Html.ValidationMessageFor(m => m.Ward, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.DetailAddress, new { @class = "form-label" })
+                        @Html.TextAreaFor(m => m.DetailAddress, new { @class = "form-control", rows = "2", placeholder = "Số nhà, tên đường" })
+                        @Html.ValidationMessageFor(m => m.DetailAddress, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Note, new { @class = "form-label" })
+                        @Html.TextAreaFor(m => m.Note, new { @class = "form-control", rows = "2", placeholder = "Ghi chú cho tài xế (nếu có)" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4">
+                    <h5 class="fw-bold mb-3">Phương thức thanh toán</h5>
+
+                    <div class="form-check">
+                        @Html.RadioButtonFor(m => m.PaymentMethod, "COD", new { @class = "form-check-input", id = "payment_cod", @checked = "checked" })
+                        <label class="form-check-label" for="payment_cod">
+                            COD – Thanh toán khi nhận hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        @Html.RadioButtonFor(m => m.PaymentMethod, "Banking", new { @class = "form-check-input", id = "payment_bank" })
+                        <label class="form-check-label" for="payment_bank">
+                            Chuyển khoản ngân hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        @Html.RadioButtonFor(m => m.PaymentMethod, "Momo", new { @class = "form-check-input", id = "payment_momo" })
+                        <label class="form-check-label" for="payment_momo">
+                            MOMO
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        @Html.RadioButtonFor(m => m.PaymentMethod, "Paypal", new { @class = "form-check-input", id = "payment_paypal" })
+                        <label class="form-check-label" for="payment_paypal">
+                            Thanh toán PayPal (USD)
+                        </label>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.PaymentMethod, "", new { @class = "text-danger" })
+
+                    <hr />
+
+                    <h4 class="text-danger text-end fw-bold">
+                        Tổng: @String.Format("{0:N0}", Model.TotalAmount) VNĐ
+                    </h4>
+                    <button type="submit" class="btn btn-success w-100 mt-3">Đặt hàng</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

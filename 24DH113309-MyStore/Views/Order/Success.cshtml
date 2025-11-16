@@ -1,0 +1,46 @@
+﻿@model _24DH113309_MyStore.Models.Order
+
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Đặt hàng thành công";
+}
+
+<div class="container py-5">
+    <div class="card shadow p-4">
+
+        <h2 class="text-success fw-bold text-center mb-4">
+            🎉 Đặt hàng thành công!
+        </h2>
+
+        <p><b>Mã đơn hàng:</b> #@Model.OrderID</p>
+        <p><b>Ngày đặt:</b> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+
+        <p><b>Thông tin giao hàng:</b></p>
+        <pre class="bg-light p-3">@Model.ShippingAddress</pre>
+
+        <h4 class="mt-4">Sản phẩm:</h4>
+        <table class="table table-bordered">
+            @foreach (var d in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@d.Product.ProductName</td>
+                    <td>@d.Quantity</td>
+                    <td>@(d.UnitPrice * d.Quantity).ToString("N0") VNĐ</td>
+                </tr>
+            }
+        </table>
+
+        <h3 class="text-end text-danger fw-bold">
+            Tổng: @Model.TotalAmount.ToString("N0") VNĐ
+        </h3>
+
+        <div class="text-center mt-3">
+            <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+        </div>
+        @if (TempData["OrderNote"] != null && TempData["OrderNote"].ToString() != "")
+        {
+            <p><b>Ghi chú cho shipper:</b> @TempData["OrderNote"]</p>
+        }
+
+    </div>
+</div>

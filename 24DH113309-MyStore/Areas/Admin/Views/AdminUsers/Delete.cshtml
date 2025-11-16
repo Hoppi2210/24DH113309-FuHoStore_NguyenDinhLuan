@@ -1,0 +1,37 @@
+﻿@model _24DH113309_MyStore.Models.User
+@{
+    ViewBag.Title = "Xác nhận xóa";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3 class="text-danger">Bạn có chắc chắn muốn xóa tài khoản này?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Tên đăng nhập
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Username)
+        </dd>
+
+        <dt class="col-sm-2">
+            Vai trò
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserRole)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color mt-3">
+            <input type="submit" value="Xóa" class="btn btn-danger me-2" /> |
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    }
+</div>

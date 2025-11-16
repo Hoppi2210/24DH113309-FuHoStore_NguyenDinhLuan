@@ -18,6 +18,8 @@ namespace _24DH113309_MyStore.Models
         public Customer()
         {
             this.Orders = new HashSet<Order>();
+            this.Carts = new HashSet<Cart>();
+            this.ShippingAddresses = new HashSet<ShippingAddress>();
         }
     
         public int CustomerID { get; set; }
@@ -30,9 +32,14 @@ namespace _24DH113309_MyStore.Models
         public string CustomerImage { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public string Role { get; set; }
+        public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cart> Carts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShippingAddress> ShippingAddresses { get; set; }
     }
 }

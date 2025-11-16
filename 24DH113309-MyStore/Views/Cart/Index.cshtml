@@ -1,60 +1,83 @@
-﻿@model List<_24DH113309_MyStore.Models.ViewModels.CartItemVM>
-
+﻿@model _24DH113309_MyStore.Models.ViewModels.CartIndexVM
+@using PagedList.Mvc
 @{
-    ViewBag.Title = "Giỏ hàng của bạn";
     Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewBag.Title = "Giỏ hàng";
 }
+<h2>🛒 Giỏ hàng</h2>
+<div class="row">
+    <div class="col-md-9">
+        @if (!Model.GroupedItems.Any())
+        {
+            <div class="alert alert-info">Giỏ hàng đang trống.</div>
+            <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Clear", "Cart")" class="btn btn-sm btn-outline-danger mb-2">Xóa tất cả giỏ hàng</a>
 
-<h2 class="text-center my-4">🛍 Giỏ hàng của bạn</h2>
-
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info text-center">
-        Giỏ hàng của bạn đang trống.
-        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-sm ms-2">Tiếp tục mua sắm</a>
-    </div>
-}
-else
-{
-    <table class="table table-bordered align-middle text-center">
-        <thead class="table-primary">
-            <tr>
-                <th>Hình ảnh</th>
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Tổng</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+            foreach (var categoryGroup in Model.GroupedItems)
             {
-                <tr>
-                    <td><img src="@item.Image" style="width:100px; height:auto; border-radius:8px;" /></td>
-                    <td>@item.Name</td>
-                    <td>@String.Format("{0:N0} VNĐ", item.Price)</td>
-                    <td>@item.Qty</td>
-                    <td>@String.Format("{0:N0} VNĐ", item.Total)</td>
-                    <td>
-                        <a href="@Url.Action("RemoveItem", "Cart", new { id = item.ProductID })" class="btn btn-danger btn-sm">🗑 Xóa</a>
-                    </td>
-                </tr>
+                <h4 class="mt-4 text-primary">@categoryGroup.Key</h4>
+                <table class="table table-bordered shadow-sm bg-white">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th width="120">SL</th>
+                            <th>Tổng</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in categoryGroup)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.Product.ProductImage" width="60" alt="@item.Product.ProductName" />
+                                    @item.Product.ProductName
+                                </td>
+                                <td>@item.UnitPrice.ToString("N0") VNĐ</td>
+                                <td>
+                                    @using (Html.BeginForm("UpdateQuantity", "Cart", FormMethod.Post))
+                                    {
+                                        <input type="hidden" name="productId" value="@item.ProductID" />
+                                        <input type="number" name="quantity" value="@item.Quantity" class="form-control" min="1" />
+                                        <button type="submit" class="btn btn-sm btn-info mt-1">Cập nhật</button>
+                                    }
+                                </td>
+                                <td>
+                                    @((item.UnitPrice * item.Quantity).ToString("N0")) VNĐ
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("RemoveItem", "Cart", FormMethod.Post))
+                                    {
+                                        @Html.Hidden("id", item.CartItemID)
+                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
-        </tbody>
-        <tfoot class="table-light">
-            <tr>
-                <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
-                <td colspan="2" class="fw-bold text-danger">
-                    @String.Format("{0:N0} VNĐ", Model.Sum(x => x.Total))
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <div class="text-center mt-3">
-        <a href="@Url.Action("Clear", "Cart")" class="btn btn-outline-danger">🧹 Xóa tất cả</a>
-        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">← Tiếp tục mua hàng</a>
-        <a href="#" class="btn btn-success">💳 Thanh toán</a>
+        }
     </div>
-}
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>Tổng cộng</h4>
+                <h3 class="text-danger">@Model.TotalValue.ToString("N0") VNĐ</h3>
+                <hr />
+                <a href="@Url.Action("Checkout", "Cart")" class="btn btn-success btn-lg w-100">
+                    Thanh toán →
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-12">
+        @Html.Partial("_PVSimilarProduct", Model)
+    </div>
+</div>

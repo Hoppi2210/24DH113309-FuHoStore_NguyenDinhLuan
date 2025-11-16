@@ -26,26 +26,28 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 1️⃣ Kiểm tra tài khoản (không phân biệt hoa/thường)
+                // 1️⃣ Chỉ kiểm tra Username và Password trước
                 var user = db.Users.SingleOrDefault(u =>
                     u.Username.Equals(model.Username, StringComparison.OrdinalIgnoreCase) &&
-                    u.Password == model.Password &&
-                    u.UserRole.Equals("Admin", StringComparison.OrdinalIgnoreCase)
+                    u.Password == model.Password
                 );
 
-                if (user != null)
+                // 2️⃣ Kiểm tra xem user có tồn tại VÀ có quyền Admin hoặc Staff không
+                if (user != null &&
+                   (user.UserRole.Equals("Admin", StringComparison.OrdinalIgnoreCase) ||
+                    user.UserRole.Equals("Staff", StringComparison.OrdinalIgnoreCase)))
                 {
-                    // 2️⃣ Tạo vé xác thực (FormsAuthenticationTicket)
+                    // 3️⃣ Tạo vé xác thực (FormsAuthenticationTicket)
                     var authTicket = new FormsAuthenticationTicket(
                         1,
                         user.Username,
                         DateTime.Now,
                         DateTime.Now.AddMinutes(60),
                         false,
-                        user.UserRole.Trim() // Lưu role vào vé
+                        user.UserRole.Trim() // Lưu role THỰC TẾ (Admin hoặc Staff) vào vé
                     );
 
-                    // 3️⃣ Mã hóa vé và tạo cookie
+                    // 4️⃣ Mã hóa vé và tạo cookie
                     string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                     var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
                     {
@@ -53,15 +55,15 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
                     };
                     Response.Cookies.Add(authCookie);
 
-                    // 4️⃣ Xóa session cũ (nếu có)
+                    // 5️⃣ Xóa session cũ (nếu có)
                     Session.Clear();
 
-                    // 5️⃣ Chuyển đến trang chủ Admin
+                    // 6️⃣ Chuyển đến trang chủ Admin
                     return RedirectToAction("Index", "Home");
                 }
 
-                // ❌ Sai tài khoản hoặc không có quyền Admin
-                ModelState.AddModelError("", "Sai tên đăng nhập, mật khẩu hoặc bạn không có quyền Admin.");
+                // ❌ Sai tài khoản hoặc không có quyền Admin/Staff
+                ModelState.AddModelError("", "Sai tên đăng nhập, mật khẩu hoặc bạn không có quyền truy cập.");
             }
 
             return View(model);

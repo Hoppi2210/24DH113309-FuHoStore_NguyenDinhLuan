@@ -1,0 +1,94 @@
+﻿@model _24DH113309_MyStore.Models.ViewModels.ShippingAddressVM
+
+<div class="card shadow p-4">
+
+    <h3 class="fw-bold mb-4">📍 Thông tin giao hàng</h3>
+
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Họ tên</label>
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Nhập họ tên", required = "required" })
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Điện thoại di động</label>
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Nhập số điện thoại", required = "required" })
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Tỉnh/Thành phố</label>
+                @Html.DropDownListFor(m => m.ProvinceId, (SelectList)ViewBag.Provinces,
+                     "-- Chọn Tỉnh/TP --", new { @class = "form-control", id = "province", required = "required" })
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Quận/Huyện</label>
+                <select id="district" name="DistrictId" class="form-control" required>
+                    <option value="">-- Chọn Quận/Huyện --</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Phường/Xã</label>
+                <select id="ward" name="WardId" class="form-control" required>
+                    <option value="">-- Chọn Phường/Xã --</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+            <label>Địa chỉ</label>
+            @Html.TextAreaFor(m => m.AddressDetail,
+                 new { @class = "form-control", placeholder = "Ví dụ: 52, đường Trần Hưng Đạo", required = "required" })
+        </div>
+
+        <label class="mt-3">Loại địa chỉ</label>
+        <div class="d-flex gap-4">
+            <label><input type="radio" name="AddressType" value="Home" checked /> Nhà riêng / Chung cư</label>
+            <label><input type="radio" name="AddressType" value="Company" /> Cơ quan / Công ty</label>
+        </div>
+
+        <div class="mt-3">
+            <label><input type="checkbox" name="IsDefault" /> Sử dụng địa chỉ này làm mặc định</label>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-4">Cập nhật</button>
+    }
+</div>
+
+<script>// Load quận theo tỉnh
+    $("#province").change(function () {
+        var id = $(this).val();
+        $("#district").html("<option>Loading...</option>");
+        $.getJSON("/Address/GetDistricts", { provinceId: id }, function (data) {
+            $("#district").empty().append("<option value=''>-- Chọn Quận/Huyện --</option>");
+            $.each(data, function (i, v) {
+                $("#district").append(`<option value="${v.DistrictId}">${v.DistrictName}</option>`);
+            });
+        });
+    });
+
+    // Load phường theo quận
+    $("#district").change(function () {
+        var id = $(this).val();
+        $("#ward").html("<option>Loading...</option>");
+        $.getJSON("/Address/GetWards", { districtId: id }, function (data) {
+            $("#ward").empty().append("<option value=''>-- Chọn Phường/Xã --</option>");
+            $.each(data, function (i, v) {
+                $("#ward").append(`<option value="${v.WardId}">${v.WardName}</option>`);
+            });
+        });
+    });</script>
+
+<style>
+    label {
+        font-weight: 600;
+    }
+</style>
+

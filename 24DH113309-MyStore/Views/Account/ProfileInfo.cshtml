@@ -1,0 +1,138 @@
+﻿@model _24DH113309_MyStore.Models.Customer
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+}
+
+<style>
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #ffc107;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        border-radius: 8px;
+    }
+
+    .btn-save {
+        width: 200px;
+        padding: 10px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container mt-4">
+
+    @* SUCCESS MESSAGE *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="profile-card">
+
+        <!-- AVATAR + NAME -->
+        <div class="d-flex align-items-center mb-4">
+            <div class="profile-avatar me-3">
+                @Model.CustomerName.Substring(0, 1).ToUpper()
+            </div>
+
+            <div>
+                <h4 class="mb-0">@Model.CustomerName</h4>
+                <small class="text-muted">@Model.CustomerEmail</small>
+            </div>
+        </div>
+
+
+        <!-- FORM THÔNG TIN CÁ NHÂN -->
+        <div class="section-title">Thông tin cá nhân</div>
+
+        @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.CustomerID)
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Họ và tên</label>
+                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", placeholder = "Nhập họ tên" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control", placeholder = "Nhập email" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Số điện thoại</label>
+                    @Html.TextBoxFor(m => m.CustomerPhone, new { @class = "form-control", placeholder = "Nhập số điện thoại" })
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-save">Lưu thay đổi</button>
+        }
+
+
+        <hr class="my-4" />
+
+        <!-- FORM ĐỔI MẬT KHẨU -->
+        <div class="section-title">Đổi mật khẩu</div>
+
+        @using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post))
+        {
+            @Html.Hidden("id", Model.CustomerID)
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label>Mật khẩu cũ</label>
+                    <input type="password" name="oldPass" class="form-control" required />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label>Mật khẩu mới</label>
+                    <input type="password" name="newPass" class="form-control" required />
+                </div>
+            </div>
+
+            <button class="btn btn-warning btn-save">Đổi mật khẩu</button>
+        }
+
+
+        <hr class="my-4" />
+
+        <!-- THÔNG TIN LIÊN HỆ NHANH -->
+        <div class="section-title">Hỗ trợ & liên hệ</div>
+
+        <div class="p-3 bg-light rounded">
+            <p>📞 Hotline hỗ trợ: <b>0988 123 456</b></p>
+            <p>💬 Email hỗ trợ: <b>support@fuho-store.vn</b></p>
+        </div>
+
+    </div>
+</div>
+

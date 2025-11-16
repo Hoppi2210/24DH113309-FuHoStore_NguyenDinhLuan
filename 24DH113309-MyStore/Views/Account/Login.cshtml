@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="container mt-5" style="max-width:480px;">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="text-center mb-4">🔐 Đăng nhập</h3>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+
+            <form method="post">
+                <div class="mb-3">
+                    <label>Tên đăng nhập</label>
+                    <input name="username" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" class="form-control" required />
+                </div>
+
+                <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
+            </form>
+
+            <p class="text-center mt-3">
+                Chưa có tài khoản?
+                <a href="@Url.Action("Register")">Đăng ký ngay</a>
+            </p>
+        </div>
+    </div>
+</div>

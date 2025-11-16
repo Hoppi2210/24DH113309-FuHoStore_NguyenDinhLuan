@@ -1,0 +1,25 @@
+﻿@model _24DH113309_MyStore.Models.ViewModels.ProductDetailVM
+
+@if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+{
+    <section>
+        <h4 style="font-weight:bold;">Sản phẩm tương tự</h4>
+        <hr />
+        <div class="row g-4">
+            @foreach (var product in Model.RelatedProducts)
+            {
+                <div class="col-md-3">
+                    <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm">
+                            <img src="@product.ProductImage" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                            <div class="card-body">
+                                <h6 class="card-title">@product.ProductName</h6>
+                                <p class="card-text text-danger fw-bold">@product.ProductPrice.ToString("N0") VNĐ</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </section>
+}

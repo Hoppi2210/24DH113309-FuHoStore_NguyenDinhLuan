@@ -1,0 +1,43 @@
+﻿@model _24DH113309_MyStore.Models.ViewModels.CartIndexVM
+@using PagedList.Mvc;
+@using PagedList;
+
+@if (Model.SimilarProducts != null && Model.SimilarProducts.Any())
+{
+    <section>
+        <h4 style="font-weight:bold;">Sản phẩm tương tự</h4>
+        <hr />
+        <div class="row g-4">
+            @foreach (var product in Model.SimilarProducts)
+            {
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm">
+                            <img src="@product.ProductImage" class="card-img-top" style="height: 150px; object-fit: cover;" />
+                            <div class="card-body">
+                                <h6 class="card-title" style="font-size: 14px;">@product.ProductName</h6>
+                                <p class="card-text text-danger fw-bold">@product.ProductPrice.ToString("N0") VNĐ</p>
+                                @Html.ActionLink("Thêm vào giỏ", "Add", "Cart", new { productId = product.ProductID }, new { @class = "btn btn-sm btn-outline-success" })
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="pagination-container mt-3 d-flex justify-content-center">
+            @Html.PagedListPager(Model.SimilarProducts, page => Url.Action("Index", "Cart", new { page = page }),
+                     new PagedListRenderOptions
+                     {
+                         Display = PagedListDisplayMode.IfNeeded,
+                         UlElementClasses = new[] { "pagination", "pagination-sm" },
+                         LiElementClasses = new[] { "page-item" },
+                         LinkToPreviousPageFormat = "«",
+                         LinkToNextPageFormat = "»",
+                         MaximumPageNumbersToDisplay = 5,
+                         DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                         DisplayLinkToLastPage = PagedListDisplayMode.Never
+                     })
+        </div>
+    </section>
+}

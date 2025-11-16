@@ -1,0 +1,41 @@
+﻿@model _24DH113309_MyStore.Models.Order
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2 class="text-success fw-bold">🎉 Đặt hàng thành công!</h2>
+
+<p>Mã đơn: <b>#@Model.OrderID</b></p>
+<p>Ngày đặt: @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+<p>Địa chỉ: @Model.ShippingAddress</p>
+<p>Thanh toán: @Model.PaymentMethod</p>
+
+<hr />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>SL</th>
+            <th>Giá</th>
+            <th>Tổng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.OrderDetails)
+        {
+            <tr>
+                <td>@d.Product.ProductName</td>
+                <td>@d.Quantity</td>
+                <td>@d.UnitPrice.ToString("N0") VNĐ</td>
+                <td>@(d.UnitPrice * d.Quantity).ToString("N0") VNĐ</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="text-danger text-end">
+    Tổng tiền: @Model.TotalAmount.ToString("N0") VNĐ
+</h3>
+
+<a href="/" class="btn btn-primary mt-3">← Tiếp tục mua sắm</a>
