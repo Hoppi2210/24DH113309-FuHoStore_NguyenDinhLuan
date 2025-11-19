@@ -24,19 +24,25 @@
 
             <hr />
 
-            @using (Html.BeginForm("ProductDetail", "Home", FormMethod.Get))
+            @using (Html.BeginForm("Add", "Cart", FormMethod.Post, new { @class = "mt-4" }))
             {
-                @Html.Hidden("id", Model.product.ProductID)
+                @Html.Hidden("productId", Model.product.ProductID)
+
                 <div class="row">
                     <div class="col-md-6">
                         <label><strong>Số lượng</strong></label>
-                        @Html.TextBoxFor(m => m.quantity, new { @class = "form-control", type = "number", min = 1 })
+                        @Html.TextBox("quantity", Model.quantity, new { @class = "form-control", type = "number", min = 1 })
                     </div>
                 </div>
 
-                @Html.ActionLink("🛒 Thêm vào giỏ", "Add", "Cart",
-                         new { productId = Model.product.ProductID },
-                         new { @class = "btn btn-success btn-lg mt-4 px-4 py-2" })
+                <button type="submit" class="btn btn-success btn-lg mt-4 px-4 py-2">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <a href="javascript:history.back()"
+                   class="btn btn-secondary btn-lg mt-4 ms-3 px-4 py-2">
+                    ⬅ Quay lại
+                </a>
             }
         </div>
 

@@ -1,5 +1,4 @@
 ﻿@model _24DH113309_MyStore.Models.Order
-
 @{
     ViewBag.Title = "Chỉnh sửa đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -17,58 +16,36 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.OrderID)
 
-        @* Hiển thị CustomerID (chỉ xem, không cho sửa) *@
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerID, "Khách hàng", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <p class="form-control-static">@Model.Customer.CustomerName (ID: @Model.CustomerID)</p>
-                @* Dùng HiddenFor để truyền ID khách hàng *@
-                @Html.HiddenFor(model => model.CustomerID)
-            </div>
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.CustomerID, "Khách hàng", htmlAttributes: new { @class = "control-label" })
+            <p class="form-control-static">@Model.Customer.CustomerName (ID: @Model.CustomerID)</p>
+            @Html.HiddenFor(model => model.CustomerID)
         </div>
 
-        @* OrderDate và TotalAmount: Thường không sửa thủ công, nên để hiển thị tĩnh *@
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderDate, "Ngày đặt", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <p class="form-control-static">@Html.DisplayFor(model => model.OrderDate)</p>
-            </div>
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.OrderDate, "Ngày đặt", htmlAttributes: new { @class = "control-label" })
+            <p class="form-control-static">@Html.DisplayFor(model => model.OrderDate)</p>
+        </div>
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.TotalAmount, "Tổng tiền", htmlAttributes: new { @class = "control-label" })
+            <p class="form-control-static">@String.Format("{0:N0} VNĐ", Model.TotalAmount)</p>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalAmount, "Tổng tiền", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <p class="form-control-static">@String.Format("{0:N0} VNĐ", Model.TotalAmount)</p>
-            </div>
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.PaymentStatus, "Trạng thái thanh toán", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.PaymentStatus, (SelectList)ViewBag.PaymentStatusList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
         </div>
 
-        @* CẬP NHẬT TRẠNG THÁI: Sử dụng DropDownList *@
-        <div class="form-group">
-            @Html.LabelFor(model => model.PaymentStatus, "Trạng thái thanh toán", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.PaymentStatus, (SelectList)ViewBag.PaymentStatusList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @* Địa chỉ giao hàng: Vẫn cho phép chỉnh sửa *@
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddressDelivery, "Địa chỉ giao hàng", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AddressDelivery, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.AddressDelivery, "Địa chỉ giao hàng", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.AddressDelivery, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group mt-4">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-primary me-2" />
-                @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
-            </div>
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary me-2" />
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
         </div>
     </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }

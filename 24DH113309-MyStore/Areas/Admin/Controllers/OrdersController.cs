@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using _24DH113309_MyStore.Models;
-using PagedList; // Cần cài đặt gói NuGet PagedList.Mvc
+using PagedList;
 
 namespace _24DH113309_MyStore.Areas.Admin.Controllers
 {
@@ -42,20 +42,13 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
             return View(order);
         }
 
-        // ==========================================================
-        // 🌟 BỔ SUNG ACTION CREATE (GET) ĐANG BỊ THIẾU
-        // ==========================================================
         // GET: Admin/Orders/Create
         public ActionResult Create()
         {
-            // Cần truyền danh sách khách hàng cho DropDownList (như trong View của bạn)
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName");
             return View();
         }
 
-        // ==========================================================
-        // 🌟 BỔ SUNG ACTION CREATE (POST) ĐANG BỊ THIẾU
-        // ==========================================================
         // POST: Admin/Orders/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -63,16 +56,13 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Gán ngày đặt hàng tự động
                 order.OrderDate = System.DateTime.Now;
-
                 db.Orders.Add(order);
                 db.SaveChanges();
                 TempData["SuccessMessage"] = "✅ Thêm đơn hàng thành công!";
                 return RedirectToAction("Index");
             }
 
-            // Nếu lỗi, tải lại DropDownList
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName", order.CustomerID);
             return View(order);
         }
@@ -96,14 +86,18 @@ namespace _24DH113309_MyStore.Areas.Admin.Controllers
             Order order = db.Orders.Find(id);
             if (order == null) return HttpNotFound();
 
+            // 1. Xóa "con" (Chi tiết đơn hàng)
             db.OrderDetails.RemoveRange(db.OrderDetails.Where(od => od.OrderID == id));
+
+            // 2. Xóa "cha" (Đơn hàng)
             db.Orders.Remove(order);
+
             db.SaveChanges();
             TempData["SuccessMessage"] = "❌ Đã xóa đơn hàng thành công!";
             return RedirectToAction("Index");
         }
 
-        // 5. GET/POST: Admin/Orders/Edit/5 (Code đã có)
+        // 5. GET/POST: Admin/Orders/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }

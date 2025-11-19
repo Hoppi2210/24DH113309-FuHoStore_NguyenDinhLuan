@@ -10,27 +10,32 @@
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal" style="padding:20px; background-color:#f9fdf9; border-radius:10px;">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
         <div class="form-group mb-3">
             @Html.Label("Khách hàng")
             @Html.DropDownList("CustomerID", null, "-- Chọn khách hàng --", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group mb-3">
             @Html.Label("Tổng tiền (VNĐ)")
             @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", type = "number", min = "0", placeholder = "Nhập tổng tiền" })
+            @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group mb-3">
             @Html.Label("Trạng thái thanh toán")
             @Html.DropDownListFor(model => model.PaymentStatus,
-                     new SelectList(new[] { "Paid", "Unpaid" }),
-                     "-- Chọn trạng thái --", new { @class = "form-control" })
+                              new SelectList(new[] { "Chưa thanh toán", "Đã thanh toán", "Đã hủy", "Chờ xử lý" }),
+                              "-- Chọn trạng thái --", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group mb-3">
             @Html.Label("Địa chỉ giao hàng")
             @Html.TextBoxFor(model => model.AddressDelivery, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group text-center mt-4">

@@ -1,59 +1,77 @@
 ﻿@model _24DH113309_MyStore.Models.Customer
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết Khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Details</h2>
+<h2 class="text-success mb-4">@ViewBag.Title: @Model.CustomerName</h2>
 
-<div>
-    <h4>Customer</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </dt>
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h4>Thông tin của: @Model.CustomerName (ID: @Model.CustomerID)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="~/Content/Images/Customers/@Model.CustomerImage"
+                     alt="@Model.CustomerName"
+                     class="img-fluid rounded-circle"
+                     style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #f0f0f0;" />
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerName)
-        </dd>
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-3">Họ và Tên</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CustomerName)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerPhone)
-        </dt>
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CustomerEmail)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerPhone)
-        </dd>
+                    <dt class="col-sm-3">Số điện thoại</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CustomerPhone)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerEmail)
-        </dt>
+                    <dt class="col-sm-3">Địa chỉ</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CustomerAddress)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerEmail)
-        </dd>
+                    <dt class="col-sm-3">Ngày tạo</dt>
+                    <dd class="col-sm-9">@Model.DateCreated?.ToString("dd/MM/yyyy")</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerAddress)
-        </dt>
+                    <hr class="my-3" />
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerAddress)
-        </dd>
+                    <dt class="col-sm-3">Tên đăng nhập</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Username)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Password)
-        </dt>
+                    <dt class="col-sm-3">Vai trò</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.User != null)
+                        {
+                            <span class="badge bg-primary">@Model.User.UserRole</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@Model.Role</span>
+                        }
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.User.Password)
-        </dd>
+                    <dt class="col-sm-3">Trạng thái</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsActive == true)
+                        {
+                            <span class="badge bg-success">Kích hoạt</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Chưa kích hoạt</span>
+                        }
+                    </dd>
 
-    </dl>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-end">
+        @Html.ActionLink("Sửa", "Edit", new { id = Model.CustomerID }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

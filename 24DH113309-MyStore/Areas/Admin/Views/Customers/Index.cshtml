@@ -7,6 +7,11 @@
 
 <h2 class="text-center text-success">QUẢN LÝ KHÁCH HÀNG</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
 <table class="table table-bordered table-hover text-center">
     <thead class="bg-success text-white">
         <tr>
@@ -32,10 +37,10 @@
                     <img src="~/Content/Images/Customers/@item.CustomerImage" style="width:70px;height:70px;border-radius:8px;" />
                 </td>
                 <td>@(item.IsActive == true ? "Kích hoạt" : "Chưa kích hoạt")</td>
-
-                <td>@item.Role</td>
+              
                 <td>
                     @Html.ActionLink("Sửa", "Edit", new { id = item.CustomerID }, new { @class = "btn btn-warning btn-sm" }) |
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.CustomerID }, new { @class = "btn btn-info btn-sm" }) |
                     @Html.ActionLink("Xóa", "Delete", new { id = item.CustomerID }, new { @class = "btn btn-danger btn-sm" })
                 </td>
             </tr>
@@ -44,16 +49,29 @@
 </table>
 
 <div class="text-end mt-3">
-    <button class="btn btn-success">Chọn tất cả</button>
-    <button class="btn btn-secondary">Bỏ chọn</button>
-    <button class="btn btn-danger">Xóa các mục chọn</button>
+    <button class="btn btn-success" id="btnCheckAll">Chọn tất cả</button>
+    <button class="btn btn-secondary" id="btnUncheckAll">Bỏ chọn</button>
+   
     <a href="@Url.Action("Create")" class="btn btn-primary">Nhập thêm</a>
 </div>
 
-<script>// Chọn tất cả checkbox
-    document.getElementById("checkAll").addEventListener("change", function () {
-        var checkboxes = document.querySelectorAll("tbody input[type='checkbox']");
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = this.checked;
-        }
-    });</script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Chọn tất cả
+            $("#checkAll").change(function () {
+                $("tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
+            });
+
+            $("#btnCheckAll").click(function () {
+                $("tbody input[type='checkbox']").prop('checked', true);
+                $("#checkAll").prop('checked', true);
+            });
+
+            $("#btnUncheckAll").click(function () {
+                $("tbody input[type='checkbox']").prop('checked', false);
+                $("#checkAll").prop('checked', false);
+            });
+        });
+    </script>
+}

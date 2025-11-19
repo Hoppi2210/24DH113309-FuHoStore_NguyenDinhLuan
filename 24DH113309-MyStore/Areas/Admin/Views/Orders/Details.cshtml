@@ -1,59 +1,107 @@
 ﻿@model _24DH113309_MyStore.Models.Order
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết Đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Details</h2>
+<h2 class="text-primary mb-4">@ViewBag.Title #@Model.OrderID</h2>
 
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </dt>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4>Các sản phẩm trong đơn</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">Ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                        {
+                            foreach (var item in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@item.Product.ProductImage" class="img-fluid rounded" style="max-width: 60px;" alt="@item.Product.ProductName" />
+                                    </td>
+                                    <td>@item.Product.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.UnitPrice.ToString("N0") VNĐ</td>
+                                    <td>@((item.Quantity * item.UnitPrice).ToString("N0")) VNĐ</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Không có sản phẩm trong đơn hàng này.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrderDate)
-        </dd>
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5>Thông tin khách hàng</h5>
+            </div>
+            <div class="card-body">
+                <strong>Tên khách hàng:</strong>
+                <p>@Html.DisplayFor(model => model.Customer.CustomerName)</p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalAmount)
-        </dt>
+                <strong>Email:</strong>
+                <p>@Html.DisplayFor(model => model.Customer.CustomerEmail)</p>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalAmount)
-        </dd>
+                <strong>Số điện thoại:</strong>
+                <p>@Html.DisplayFor(model => model.Customer.CustomerPhone)</p>
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PaymentStatus)
-        </dt>
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5>Thông tin đơn hàng</h5>
+            </div>
+            <div class="card-body">
+                <strong>Ngày đặt:</strong>
+                <p>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
 
-        <dd>
-            @Html.DisplayFor(model => model.PaymentStatus)
-        </dd>
+                <strong>Trạng thái thanh toán:</strong>
+                <p>
+                    @if (Model.PaymentStatus == "Paid" || Model.PaymentStatus == "Đã thanh toán")
+                    {
+                        <span class="badge bg-success">@Model.PaymentStatus</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">@Model.PaymentStatus</span>
+                    }
+                </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AddressDelivery)
-        </dt>
+                <strong>Địa chỉ giao hàng:</strong>
+                <p>@Html.DisplayFor(model => model.AddressDelivery)</p>
 
-        <dd>
-            @Html.DisplayFor(model => model.AddressDelivery)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Customer.CustomerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Customer.CustomerName)
-        </dd>
-
-    </dl>
+                <hr />
+                <h4 class="text-end text-danger">
+                    Tổng tiền: @Model.TotalAmount.ToString("N0") VNĐ
+                </h4>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<div class="mt-4">
+    @Html.ActionLink("Sửa (Trạng thái/Địa chỉ)", "Edit", new { id = Model.OrderID }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+</div>

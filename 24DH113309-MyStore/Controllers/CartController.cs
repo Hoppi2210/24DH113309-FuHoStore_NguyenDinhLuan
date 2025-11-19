@@ -67,33 +67,43 @@ namespace _24DH113309_MyStore.Controllers
         }
 
         // ================= THÊM GIỎ =================
-        public ActionResult Add(int productId)
+        // Sửa: Thêm tham số "int quantity"
+        public ActionResult Add(int productId, int quantity = 1)
         {
             if (Session["CUS"] == null)
                 return RedirectToAction("Login", "Account");
+
+            // Đảm bảo số lượng luôn ít nhất là 1
+            if (quantity < 1)
+            {
+                quantity = 1;
+            }
+
             var cus = (Customer)Session["CUS"];
             int cartId = GetCartId(cus.CustomerID);
             var product = db.Products.Find(productId);
             if (product == null)
                 return HttpNotFound();
+
             var item = db.CartItems
                 .FirstOrDefault(x => x.CartID == cartId && x.ProductID == productId);
+
             if (item == null)
             {
                 db.CartItems.Add(new CartItem
                 {
                     CartID = cartId,
                     ProductID = productId,
-                    Quantity = 1,
+                    Quantity = quantity, 
                     UnitPrice = product.ProductPrice
                 });
             }
             else
             {
-                item.Quantity++;
+                item.Quantity += quantity; 
             }
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); // Chuyển về trang giỏ hàng
         }
 
         // ========== CẬP NHẬT SỐ LƯỢNG ==========

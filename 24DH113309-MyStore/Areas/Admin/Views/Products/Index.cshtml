@@ -148,13 +148,13 @@
     @Html.ActionLink("Tên tăng dần", "Index", new { sortOrder = "name_asc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
                         new { @class = ViewBag.SortOrder == "name_asc" ? "sort-link active" : "sort-link" })
     |
-    @Html.ActionLink("Tên tăng dần", "Index", new { sortOrder = "name_desc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
+    @Html.ActionLink("Tên giảm dần", "Index", new { sortOrder = "name_desc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
                         new { @class = ViewBag.SortOrder == "name_desc" ? "sort-link active" : "sort-link" })
     |
-    @Html.ActionLink("Giá giảm dần ", "Index", new { sortOrder = "price_asc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
+    @Html.ActionLink("Giá tăng dần ", "Index", new { sortOrder = "price_asc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
                         new { @class = ViewBag.SortOrder == "price_asc" ? "sort-link active" : "sort-link" })
     |
-    @Html.ActionLink("Giá tăng dần", "Index", new { sortOrder = "price_desc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
+    @Html.ActionLink("Giá giảm dần", "Index", new { sortOrder = "price_desc", searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice },
                         new { @class = ViewBag.SortOrder == "price_desc" ? "sort-link active" : "sort-link" })
 </div>
 
